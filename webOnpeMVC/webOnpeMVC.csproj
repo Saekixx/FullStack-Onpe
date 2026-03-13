@@ -6,4 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Views\Onpe\Participacion_Nacional\**" />
+    <Content Remove="Views\Onpe\Participacion_Nacional\**" />
+    <EmbeddedResource Remove="Views\Onpe\Participacion_Nacional\**" />
+    <None Remove="Views\Onpe\Participacion_Nacional\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+  </ItemGroup>
+
 </Project>
