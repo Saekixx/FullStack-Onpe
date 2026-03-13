@@ -34,14 +34,30 @@ namespace webOnpeMVC.Controllers
 
         public IActionResult Participacion_Provincia(string departamento)
         {
+            ViewBag.Departamento = departamento;
             return View( daoVoto.getVotosProvincia(departamento) );
         }
-        public IActionResult Participacion_Distrito(string provincia)
+        public IActionResult Participacion_Distrito(string provincia, string departamento)
         {
+            ViewBag.Provincia = provincia;
+            ViewBag.Departamento = departamento;
             return View( daoVoto.getVotosDistrito(provincia) );
         }
 
-        public IActionResult Actas_Ubigeo()
+        public IActionResult ParticipacionDistritoDetalle(string departamento, string provincia, string distrito, int TV, string PTV, int TA, string PTA, int EH)
+        {
+            ViewBag.Departamento = departamento;
+            ViewBag.Provincia = provincia;
+            ViewBag.Distrito = distrito;
+            ViewBag.TV = TV;
+            ViewBag.PTV = PTV;
+            ViewBag.TA = TA;
+            ViewBag.PTA = PTA;
+            ViewBag.EH = EH;
+            return View();
+        }
+
+    public IActionResult Actas_Ubigeo()
         {
             return View();
         }

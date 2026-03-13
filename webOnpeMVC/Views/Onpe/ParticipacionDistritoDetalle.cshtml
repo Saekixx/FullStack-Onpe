@@ -1,21 +1,19 @@
 ﻿@model List<webOnpeMVC.Models.VotosDepartamentos>
 @{
-    int TVTotal = 0;
-    int TATotal = 0;
-    int EHTotal = 0;
+    string departamento = ViewBag.Departamento;
+    string provincia = ViewBag.Provincia;
+    string distrito = ViewBag.Distrito;
+    int TV = ViewBag.TV;
+    string PTV = ViewBag.PTV;
+    int TA = ViewBag.TA;
+    string PTA = ViewBag.PTA;
+    int EH = ViewBag.EH;
 
-    @foreach (var oVotos in Model)
-    {
-        TVTotal += oVotos.TV;
-        TATotal += oVotos.TA;
-        EHTotal += oVotos.EH;
-    }
+    double participacion = Convert.ToDouble(PTV.Replace("%", "").Replace(".", "").Trim()) / 1000;
+    double ausentismo = Convert.ToDouble(PTA.Replace("%", "").Replace(".", "").Trim()) / 1000;
 
-    double porcParticipacion = (EHTotal > 0) ? (TVTotal * 100.0) / EHTotal : 0;
-    double porcAusentismo = (EHTotal > 0) ? (TATotal * 100.0) / EHTotal : 0;
-
-    string pParticipacionStr = porcParticipacion.ToString("F3").Replace(",", ".");
-    string pAusentismoStr = porcAusentismo.ToString("F3").Replace(",", ".");
+    string participacionJS = participacion.ToString().Replace(",", ".");
+    string ausentismoJS = ausentismo.ToString().Replace(",", ".");
 }
 
 <div id="imprimelo3">
@@ -108,15 +106,21 @@
 
                             <script>
                                 document.addEventListener("DOMContentLoaded", function () {
-                                    crearGraficoParticipacion("ParticipacionDistritoDetalle", @pParticipacionStr, @pAusentismoStr);
+                                    crearGraficoParticipacion("ParticipacionDistritoDetalle", @participacionJS, @ausentismoJS);
                                 });
                             </script>
 
                             <div class="col-xs-12 col-md-6">
                                 <div class="cont-recto" style="margin-bottom:10px">
-                                    Ámbito: Extranjero
+                                    Ámbito: Nacional
+                                    <br>
+                                    Departamento: @departamento
+                                    <br>
+                                    Provincia: @provincia
+                                    <br>
+									Distrito: @distrito
                                 </div>
-                                <p class="subtitle">ELECTORES HÁBILES @EHTotal.ToString("N0").Replace(".", ",")</p>
+                                <p class="subtitle">ELECTORES HÁBILES @EH.ToString("N0").Replace(".", ",")</p>
                                 <div id="page-wrap">
                                     <table class="table09_2" cellspacing="0">
                                         <thead>
@@ -127,56 +131,17 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>TOTAL: @TVTotal.ToString("N0").Replace(".", ",")</td>
-                                                <td>TOTAL: @TATotal.ToString("N0").Replace(".", ",")</td>
+                                                <td>TOTAL: @TV.ToString("N0").Replace(".", ",")</td>
+                                                <td>TOTAL: @TA.ToString("N0").Replace(".", ",")</td>
                                             </tr>
                                             <tr>
-                                                <td>% TOTAL: @pParticipacionStr%</td>
-                                                <td>% TOTAL: @pAusentismoStr%</td>
+                                                <td>% TOTAL: @PTV</td>
+                                                <td>% TOTAL: @PTA</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
-                        </div>
-
-                        <div class="col-xs-12">
-                            <p class="subtitle">Consulta de participación DETALLADO </p>
-                            <div id="page-wrap">
-                                <table class="table21">
-                                    <tbody id="resultados">
-                                        <tr class="titulo_tabla">
-                                            <td>CONTINENTE</td>
-                                            <td>TOTAL ASISTENTES</td>
-                                            <td>% TOTAL ASISTENTES</td>
-                                            <td>TOTAL AUSENTES</td>
-                                            <td>% TOTAL AUSENTES</td>
-                                            <td>ELECTORES HÁBILES</td>
-                                        </tr>
-                                        @foreach (var oVotos in Model)
-                                        {
-                                            <tr onclick="location.href='@Url.Action("Participacion_Provincia", "Onpe", new { departamento = oVotos.DPD })'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
-                                                <td>@oVotos.DPD</td>
-                                                <td>@oVotos.TV.ToString("N0").Replace(".", ",")</td>
-                                                <td>@oVotos.PTV</td>
-                                                <td>@oVotos.TA.ToString("N0").Replace(".", ",")</td>
-                                                <td>@oVotos.PTA</td>
-                                                <td>@oVotos.EH.ToString("N0").Replace(".", ",")</td>
-                                            </tr>
-                                        }
-                                        <tr>
-                                            <td>TOTALES</td>
-                                            <td>@TVTotal.ToString("N0").Replace(".", ",")</td>
-                                            <td>@pParticipacionStr%</td>
-                                            <td>@TATotal.ToString("N0").Replace(".", ",")</td>
-                                            <td>@pAusentismoStr%</td>
-                                            <td>@EHTotal.ToString("N0").Replace(".", ",")</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
                         </div>
                     </div>
                 </div>

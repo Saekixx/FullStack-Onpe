@@ -1,4 +1,22 @@
 ﻿@model List<webOnpeMVC.Models.VotosDepartamentos>
+@{
+    int TVTotal = 0;
+    int TATotal = 0;
+    int EHTotal = 0;
+
+    @foreach (var oVotos in Model)
+    {
+        TVTotal += oVotos.TV;
+        TATotal += oVotos.TA;
+        EHTotal += oVotos.EH;
+    }
+
+    double porcParticipacion = (EHTotal > 0) ? (TVTotal * 100.0) / EHTotal : 0;
+    double porcAusentismo = (EHTotal > 0) ? (TATotal * 100.0) / EHTotal : 0;
+
+    string pParticipacionStr = porcParticipacion.ToString("F3").Replace(",", ".");
+    string pAusentismoStr = porcAusentismo.ToString("F3").Replace(",", ".");
+}
 
 <div id="imprimelo3">
     <div class="container">
@@ -85,14 +103,20 @@
 
                         <div class="col-xs-12 line pbot30">
                             <div class="col-xs-12 col-md-6">
-                                <img src="imagen.jpg?_tot_participacion=81.543&amp;_tot_ausentismo=18.457" class="img-responsive">
+                                <div id="ParticipacionDistritoDetalle"></div>
                             </div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    crearGraficoParticipacion("ParticipacionDistritoDetalle", @pParticipacionStr, @pAusentismoStr);
+                                });
+                            </script>
 
                             <div class="col-xs-12 col-md-6">
                                 <div class="cont-recto" style="margin-bottom:10px">
                                     Ámbito: Nacional
                                 </div>
-                                <p class="subtitle">ELECTORES HÁBILES 22,017,030</p>
+                                <p class="subtitle">ELECTORES HÁBILES @EHTotal.ToString("N0").Replace(".", ",")</p>
                                 <div id="page-wrap">
                                     <table class="table09_2" cellspacing="0">
                                         <thead>
@@ -103,12 +127,12 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>TOTAL: 17,953,367</td>
-                                                <td>TOTAL: 4,063,663</td>
+                                                <td>TOTAL: @TVTotal.ToString("N0").Replace(".", ",")</td>
+                                                <td>TOTAL: @TATotal.ToString("N0").Replace(".", ",")</td>
                                             </tr>
                                             <tr>
-                                                <td>% TOTAL: 81.543%</td>
-                                                <td>% TOTAL: 18.457%</td>
+                                                <td>% TOTAL: @pParticipacionStr%</td>
+                                                <td>% TOTAL: @pAusentismoStr%</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -134,20 +158,20 @@
                                         {
                                             <tr onclick="location.href='@Url.Action("Participacion_Provincia", "Onpe", new { departamento = oVotos.DPD })'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
                                                 <td>@oVotos.DPD</td>
-                                                <td>@oVotos.TV</td>
+                                                <td>@oVotos.TV.ToString("N0").Replace(".", ",")</td>
                                                 <td>@oVotos.PTV</td>
-                                                <td>@oVotos.TA</td>
+                                                <td>@oVotos.TA.ToString("N0").Replace(".", ",")</td>
                                                 <td>@oVotos.PTA</td>
-                                                <td>@oVotos.EH</td>
+                                                <td>@oVotos.EH.ToString("N0").Replace(".", ",")</td>
                                             </tr>
                                         }
                                         <tr>
                                             <td>TOTALES</td>
-                                            <td>17,953,367</td>
-                                            <td>81.543%</td>
-                                            <td>4,063,663</td>
-                                            <td>18.457%</td>
-                                            <td>22,017,030</td>
+                                            <td>@TVTotal.ToString("N0").Replace(".", ",")</td>
+                                            <td>@pParticipacionStr%</td>
+                                            <td>@TATotal.ToString("N0").Replace(".", ",")</td>
+                                            <td>@pAusentismoStr%</td>
+                                            <td>@EHTotal.ToString("N0").Replace(".", ",")</td>
                                         </tr>
                                     </tbody>
                                 </table>

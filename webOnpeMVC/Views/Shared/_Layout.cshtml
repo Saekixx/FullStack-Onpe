@@ -43,5 +43,47 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+                function crearGraficoParticipacion(id, participacion, ausentismo) {
+            google.charts.load('current', { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Tipo', 'Porcentaje'],
+                    ['Participación', participacion],
+                    ['Ausentismo', ausentismo]
+                ]);
+
+                var formatter = new google.visualization.NumberFormat({
+                    pattern: '#,##0.000' 
+                });
+                formatter.format(data, 1); 
+
+                var options = {
+                    is3D: true,
+                    slices: {
+                        1: { offset: 0.2 }
+                    },
+                    colors: ['#2f4b7c', '#c0c0c0'],
+                    pieSliceText: 'value',
+                    tooltip: {
+                        text: 'both',
+                        trigger: 'focus'
+                    },
+                    legend: { position: 'right', textStyle: { fontSize: 12 } }
+                };
+
+                var chart = new google.visualization.PieChart(
+                    document.getElementById(id)
+                );
+
+                chart.draw(data, options);
+            }
+        }
+    </script>
     </body>
 </html>
