@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using webOnpeMVC.Controllers.dao;
+using webOnpeMVC.Models;
 
 namespace webOnpeMVC.Controllers
 {
@@ -57,14 +59,24 @@ namespace webOnpeMVC.Controllers
             return View();
         }
 
-    public IActionResult Actas_Ubigeo()
+        public IActionResult Actas_Ubigeo()
         {
-            return View();
+            return View( );
         }
 
-        public IActionResult Actas_Numero()
+        public IActionResult Actas_Numero(string nroMesa)
         {
-            return View();
+            if( nroMesa == null)
+            {
+                ViewBag.Busqueda = false;
+                return View();
+            }
+                
+
+            var model = daoVoto.getGrupoVotacion(nroMesa);
+            ViewBag.Busqueda = true;
+            return View( model );
         }
+    
     }
 }

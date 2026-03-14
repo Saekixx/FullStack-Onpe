@@ -1,8 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model webOnpeMVC.Models.GrupoVotacion
+
 <div class="container">
     <img src="~/images/f-actas.jpg" width="1170" height="248" class="img-responsive mg30top">
 
@@ -76,7 +73,8 @@
                             <br>
                             <p>&nbsp;</p>
                             <p>&nbsp;</p>
-                            <form id="myform" name="myform" class="horizontal-form" method="post" action="javascript:actas_bscarPrNmroMesa(document.getElementById('myform'));">
+                            <form id="myform" name="myform" class="horizontal-form" method="get" action="@Url.Action("Actas_Numero", "Onpe")">
+
                                 <div class="col-md-3">
                                     INGRESE EL NÚMERO DE ACTA:
                                 </div>
@@ -90,18 +88,21 @@
                                 </div>
 
                                 <div class="col-md-2">
-                                    <button type="button" onclick="javascript:actas_bscarPrNmroMesa(document.getElementById('myform'));" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> BUSCAR</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> BUSCAR
+                                    </button>
                                 </div>
                             </form>
                         </div>
+                    </div>
 
-                        <div id="divDetalle" class="ptop20">
-                            <div class="contenido-resultados">
-                                <p>&nbsp;</p>
-                                <div class="row">
-
-                                    <div class="tab-info">EL NÚMERO DE MESA QUE HA INGRESADO NO EXISTE</div>
-
+                    <div id="divDetalle" class="ptop20">
+                        <div class="contenido-resultados">
+                            <p>&nbsp;</p>
+                            <div class="row">
+                                @if(Model == null){}
+                                else
+                                {
                                     <div class="tab-content">
                                         <div id="detMesa">
                                             <div class="tab-content">
@@ -132,8 +133,8 @@
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                        <td>000001</td>
-                                                                                        <td>93Y</td>
+                                                                                        <td>@Model.idGrupoVotacion</td>
+                                                                                        <td>@Model.nCopia</td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -153,11 +154,11 @@
                                                                                         <td>Dirección</td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td>AMAZONAS</td>
-                                                                                        <td>CHACHAPOYAS</td>
-                                                                                        <td>CHACHAPOYAS</td>
-                                                                                        <td>IE 18288 ISABEL LYNCH DE RUBIO</td>
-                                                                                        <td>JR. AYACUCHO 870</td>
+                                                                                        <td>@Model.Departamento</td>
+                                                                                        <td>@Model.Provincia</td>
+                                                                                        <td>@Model.Distrito</td>
+                                                                                        <td>@Model.RazonSocial</td>
+                                                                                        <td>@Model.Direccion</td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -175,9 +176,9 @@
                                                                                         <td>Estado del acta</td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td>290</td>
-                                                                                        <td>241</td>
-                                                                                        <td>ACTA ELECTORAL NORMAL</td>
+                                                                                        <td>@Model.ElectoresHabiles</td>
+                                                                                        <td>@Model.TotalVotantes</td>
+                                                                                        <td>Acta Electoral Normal</td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -196,7 +197,6 @@
                                                                 <div id="page-wrap">
                                                                     <div class="col-md-12 resolu"></div>
                                                                 </div>
-                                                                <!-- <p class="centro"># : El valor consignado en el acta presenta ilegibilidad.</p> -->
                                                             </div>
                                                         </div>
 
@@ -213,28 +213,28 @@
                                                                             <tr>
                                                                                 <td>PERUANOS POR EL KAMBIO</td>
                                                                                 <td><img width="40px" height="40px" src="~/images/simbolo_pkk.jpg"></td>
-                                                                                <td>127</td>
+                                                                                <td>@Model.P1</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>FUERZA POPULAR</td>
                                                                                 <td><img width="40px" height="40px" src="~/images/simbolo_keyko.jpg"></td>
-                                                                                <td>101</td>
+                                                                                <td>@Model.P2</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td colspan="2">VOTOS EN BLANCO</td>
-                                                                                <td>0</td>
+                                                                                <td>@Model.VotosBlancos</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td colspan="2">VOTOS NULOS</td>
-                                                                                <td>13</td>
+                                                                                <td>@Model.VotosNulos</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td colspan="2">VOTOS IMPUGNADOS</td>
-                                                                                <td>0</td>
+                                                                                <td>@Model.VotosImpugnados</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td colspan="2">TOTAL DE  VOTOS EMITIDOS</td>
-                                                                                <td>241</td>
+                                                                                <td>@Model.TotalVotantes</td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
@@ -242,16 +242,16 @@
                                                             </div>
 
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
 
                                         </div>
                                     </div>
-                                </div>
+                                }
 
                             </div>
+
                         </div>
                     </div>
 

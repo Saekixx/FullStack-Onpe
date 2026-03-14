@@ -29,5 +29,16 @@ namespace webOnpeMVC.Controllers.dao
             clsbd.Sentencia("usp_getVotosProvincia", new SqlParameter("@Provincia", provincia));
             return new VotosDepartamentos().getList(clsbd.getRegistros());
         }
+
+        public GrupoVotacion getGrupoVotacion(string idGrupoVotacion)
+        {
+            clsbd.Sentencia("usp_getGrupoVotacion", new SqlParameter("@idGrupoVotacion", idGrupoVotacion));
+            string[] registro = clsbd.getRegistro();
+
+            if (registro == null) return null;
+
+            return new GrupoVotacion(registro);
+        }
+
     }
 }
