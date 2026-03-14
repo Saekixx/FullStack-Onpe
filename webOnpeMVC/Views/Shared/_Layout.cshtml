@@ -45,7 +45,6 @@
     </footer>
 
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-
     <script>
                 function crearGraficoParticipacion(id, participacion, ausentismo) {
             google.charts.load('current', { packages: ['corechart'] });
@@ -85,5 +84,49 @@
             }
         }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // 1. Entrega de datos desde C# a JS
+            const dptosPeru = @Html.Raw(Json.Serialize(ViewBag.DepartamentosPeru));
+            const dptosExt = @Html.Raw(Json.Serialize(ViewBag.DepartamentosExtranjero));
+
+            $('#cdgoAmbito').change(function () {
+                // Obtenemos el valor seleccionado ('P' o 'E')
+                const ambito = $(this).val();
+                const $comboDep = $('#cdgoDep');
+
+                // 2. LIMPIEZA TOTAL: Borramos todo lo anterior
+                $comboDep.find('option').remove();
+                $comboDep.append('<option value="">--SELECCIONE--</option>');
+
+                // 3. SELECCIÓN DE LISTA
+                let listaAMostrar = [];
+                if (ambito === "P") {
+                    listaAMostrar = dptosPeru;
+                    console.log("Cargando lista de Perú...");
+                } else if (ambito === "E") {
+                    listaAMostrar = dptosExt;
+                    console.log("Cargando lista de Extranjero...");
+                }
+
+                // 4. LLENADO
+                if (listaAMostrar && listaAMostrar.length > 0) {
+                    listaAMostrar.forEach(item => {
+                        // Usamos item.dpd (asegúrate que en C# sea DPD)
+                        $comboDep.append(`<option value="${item.dpd}">${item.dpd}</option>`);
+                    });
+                } else {
+                    console.error("La lista seleccionada está vacía o es nula");
+                }
+            });
+
+            // Disparo inicial
+            $('#cdgoAmbito').trigger('change');
+        });
+    </script>
+
     </body>
 </html>

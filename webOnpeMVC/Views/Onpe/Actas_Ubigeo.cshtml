@@ -1,6 +1,7 @@
 ﻿@{
 
 }
+
 <div class="container">
     <img src="~/images/f-actas.jpg" width="1170" height="248" class="img-responsive mg30top">
 
@@ -76,7 +77,7 @@
                                 <div class="col-md-3">
                                     <label class="control-label">Ámbito:</label>
                                     <div id="ambito" class="form-group">
-                                        <select name="cdgoAmbito" id="cdgoAmbito" class="form-control" onchange="buscarAmbito('', 'acta', '', this.value, ''); $('#aComentarioProvincia').html('');">
+                                        <select name="cdgoAmbito" id="cdgoAmbito" class="form-control">
                                             <option value="P">PERÚ</option>
                                             <option value="E">EXTRANJERO</option>
                                         </select>
@@ -89,31 +90,17 @@
                                         <div id="departamentos">
                                             <select name="cdgoDep" id="cdgoDep" class="form-control" onchange="getProvinciasDepa_acta('', '', this.value);">
                                                 <option selected="selected" value="">--SELECCIONE--</option>
-                                                <option value="010000">AMAZONAS</option>
-                                                <option value="020000">ANCASH</option>
-                                                <option value="030000">APURIMAC</option>
-                                                <option value="040000">AREQUIPA</option>
-                                                <option value="050000">AYACUCHO</option>
-                                                <option value="060000">CAJAMARCA</option>
-                                                <option value="240000">CALLAO</option>
-                                                <option value="070000">CUSCO</option>
-                                                <option value="080000">HUANCAVELICA</option>
-                                                <option value="090000">HUANUCO</option>
-                                                <option value="100000">ICA</option>
-                                                <option value="110000">JUNIN</option>
-                                                <option value="120000">LA LIBERTAD</option>
-                                                <option value="130000">LAMBAYEQUE</option>
-                                                <option value="140000">LIMA</option>
-                                                <option value="150000">LORETO</option>
-                                                <option value="160000">MADRE DE DIOS</option>
-                                                <option value="170000">MOQUEGUA</option>
-                                                <option value="180000">PASCO</option>
-                                                <option value="190000">PIURA</option>
-                                                <option value="200000">PUNO</option>
-                                                <option value="210000">SAN MARTIN</option>
-                                                <option value="220000">TACNA</option>
-                                                <option value="230000">TUMBES</option>
-                                                <option value="250000">UCAYALI</option>
+                                                @* Iteración manual para Perú *@
+                                                @foreach (var item in (List<webOnpeMVC.Models.VotosDepartamentos>)ViewBag.DepartamentosPeru)
+                                                {
+                                                    <option value="@item.DPD">@item.DPD</option>
+                                                }
+
+                                                @* Iteración manual para Extranjero *@
+                                                @foreach (var item in (List<webOnpeMVC.Models.VotosDepartamentos>)ViewBag.DepartamentosExtranjero)
+                                                {
+                                                    <option value="@item.DPD">@item.DPD</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>

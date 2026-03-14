@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Runtime.Intrinsics.Arm;
 using webOnpeMVC.Controllers.dao;
 using webOnpeMVC.Models;
 
@@ -59,9 +60,13 @@ namespace webOnpeMVC.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Actas_Ubigeo()
         {
-            return View( );
+            ViewBag.DepartamentosPeru = daoVoto.getVotosDepartamentos();
+            ViewBag.DepartamentosExtranjero = daoVoto.getVotosExtranjero();
+
+            return View();
         }
 
         public IActionResult Actas_Numero(string nroMesa)
