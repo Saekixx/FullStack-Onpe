@@ -63,10 +63,64 @@ namespace webOnpeMVC.Controllers
         [HttpGet]
         public IActionResult Actas_Ubigeo()
         {
-            ViewBag.DepartamentosPeru = daoVoto.getVotosDepartamentos();
-            ViewBag.DepartamentosExtranjero = daoVoto.getVotosExtranjero();
+            // Usamos las listas de Departamentos puras, no de votos
+            var todosLosDeptos = daoVoto.getDepartamentos();
+
+            // Filtramos por ID como me indicaste (1-25 Perú, 26-30 Extranjero)
+            ViewBag.DepartamentosPeru = todosLosDeptos.Where( d => (d.idDepartamento) <= 25).ToList();
+            ViewBag.DepartamentosExtranjero = todosLosDeptos.Where( d => (d.idDepartamento) > 25).ToList();
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult GetProvincias(string idDepartamento)
+        {
+            // Usamos el ID para obtener las provincias
+            var provincias = daoVoto.GetProvincias(idDepartamento);
+            return Json(provincias);
+        }
+
+        [HttpPost]
+        public JsonResult GetDistritos(string idProvincia)
+        {
+            // Usamos el ID para obtener los distritos
+            var distritos = daoVoto.GetDistritos(idProvincia);
+            return Json(distritos);
+        }
+
+        [HttpPost]
+        public JsonResult GetLocalesVotacion(string idDistrito)
+        {
+            var local = daoVoto.getLocalesVotacion(idDistrito);
+            return Json(local);
+        }
+
+        [HttpPost]
+        public JsonResult GetLocales(string idDistrito)
+        {
+            var lista = daoVoto.getGrupoVotacion(idDistrito);
+            return Json(lista);
+        }
+
+        [HttpPost]
+        public JsonResult GetMesa(string idLocal)
+        {
+            var mesas = daoVoto.GetGruposVotacions(idLocal);
+            return Json( mesas );
+        }
+
+        [HttpPost]
+        public IActionResult MesaDetalle(string nroMesa)
+        {
+            var model = daoVoto.getGrupoVotacion(nroMesa);
+
+            if (model == null)
+            {
+                return Content("<div class='alert alert-warning'>No se encontró información detallada para la mesa " + nroMesa + "</div>");
+            }
+
+            return PartialView("_DetalleMesa", model);
         }
 
         public IActionResult Actas_Numero(string nroMesa)
@@ -77,11 +131,11 @@ namespace webOnpeMVC.Controllers
                 return View();
             }
                 
-
             var model = daoVoto.getGrupoVotacion(nroMesa);
             ViewBag.Busqueda = true;
             return View( model );
         }
-    
+        
+
     }
 }
