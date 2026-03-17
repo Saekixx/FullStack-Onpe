@@ -13,7 +13,7 @@ namespace webOnpeMVC.Controllers.bd
 
         public clsBD(string BD)
         {
-            CadenaConexion = "Data Source=localhost;Database=Onpe;Trusted_Connection=True;TrustServerCertificate=True";
+            CadenaConexion = "Server=tcp:leandro.database.windows.net,1433;Initial Catalog=Onpe;User ID=jack;Password=Senati2026$;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             cn = new SqlConnection(CadenaConexion);
             cmd = new SqlCommand("", cn);
             da = new SqlDataAdapter(cmd);
