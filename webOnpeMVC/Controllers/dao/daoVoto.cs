@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using webOnpeMVC.Models;
+using webOnpeMVC.Models.Ubigeo;
+using webOnpeMVC.Models.Votacion;
 
 namespace webOnpeMVC.Controllers.dao
 {
@@ -40,22 +41,10 @@ namespace webOnpeMVC.Controllers.dao
             return new GrupoVotacion(registro);
         }
 
-        public List<Departamento> getDepartamentos()
+        public List<GruposVotacion> GetGruposVotacions(string idLocalVotacion)
         {
-            clsbd.Sentencia("usp_getDepartamentos");
-            return new Departamento().getList(clsbd.getRegistros());
-        }
-
-        public List<Provincia> GetProvincias(string idDepartamento)
-        {
-            clsbd.Sentencia("usp_getProvincias", new SqlParameter("@idDepartamento", idDepartamento));
-            return new Provincia().getList(clsbd.getRegistros());
-        }
-
-        public List<Distrito> GetDistritos(string idProvincia)
-        {
-            clsbd.Sentencia("usp_getDistritos", new SqlParameter("@idProvincia", idProvincia));
-            return new Distrito().getList(clsbd.getRegistros());
+            clsbd.Sentencia("usp_getGruposVotacion", new SqlParameter("@idLocalVotacion", idLocalVotacion));
+            return new GruposVotacion().getList(clsbd.getRegistros());
         }
 
         public LocalesVotacion getLocalesVotacion(string idDistrito)
@@ -68,10 +57,5 @@ namespace webOnpeMVC.Controllers.dao
             return new LocalesVotacion(registro);
         }
 
-        public List<GruposVotacion> GetGruposVotacions(string idLocalVotacion)
-        {
-            clsbd.Sentencia("usp_getGruposVotacion", new SqlParameter("@idLocalVotacion", idLocalVotacion));
-            return new GruposVotacion().getList(clsbd.getRegistros());
-        }
     }
 }

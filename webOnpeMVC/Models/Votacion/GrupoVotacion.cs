@@ -1,4 +1,4 @@
-﻿namespace webOnpeMVC.Models
+﻿namespace webOnpeMVC.Models.Votacion
 {
     public class GrupoVotacion
     {
@@ -34,7 +34,7 @@
             RazonSocial = aRegistro[3];
             Direccion = aRegistro[4];
             idLocalVotacion = int.Parse(aRegistro[5]);
-            idGrupoVotacion = (aRegistro[6]);
+            idGrupoVotacion = aRegistro[6];
             nCopia = aRegistro[7];
             idEstadoActa = int.Parse(aRegistro[8]);
             ElectoresHabiles = int.Parse(aRegistro[9]);

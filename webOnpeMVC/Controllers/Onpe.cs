@@ -9,6 +9,7 @@ namespace webOnpeMVC.Controllers
     public class Onpe : Controller
     {
         dao.daoVoto daoVoto = new dao.daoVoto();
+        dao.daoUbigeo daoUbigeo = new dao.daoUbigeo();
 
         public IActionResult Inicio()
         {
@@ -64,9 +65,9 @@ namespace webOnpeMVC.Controllers
         public IActionResult Actas_Ubigeo()
         {
             // Usamos las listas de Departamentos puras, no de votos
-            var todosLosDeptos = daoVoto.getDepartamentos();
+            var todosLosDeptos = daoUbigeo.getDepartamentos();
 
-            // Filtramos por ID como me indicaste (1-25 Perú, 26-30 Extranjero)
+            // Filtramos por ID (1-25 Perú, 26-30 Extranjero)
             ViewBag.DepartamentosPeru = todosLosDeptos.Where( d => (d.idDepartamento) <= 25).ToList();
             ViewBag.DepartamentosExtranjero = todosLosDeptos.Where( d => (d.idDepartamento) > 25).ToList();
 
@@ -76,16 +77,14 @@ namespace webOnpeMVC.Controllers
         [HttpPost]
         public JsonResult GetProvincias(string idDepartamento)
         {
-            // Usamos el ID para obtener las provincias
-            var provincias = daoVoto.GetProvincias(idDepartamento);
+            var provincias = daoUbigeo.GetProvincias(idDepartamento);
             return Json(provincias);
         }
 
         [HttpPost]
         public JsonResult GetDistritos(string idProvincia)
         {
-            // Usamos el ID para obtener los distritos
-            var distritos = daoVoto.GetDistritos(idProvincia);
+            var distritos = daoUbigeo.GetDistritos(idProvincia);
             return Json(distritos);
         }
 

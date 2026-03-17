@@ -1,4 +1,4 @@
-﻿namespace webOnpeMVC.Models
+﻿namespace webOnpeMVC.Models.Ubigeo
 {
     public class Distrito
     {
