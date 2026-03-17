@@ -220,7 +220,7 @@
                 if (idDep && idDep !== "") {
                     $.ajax({
                         url: '@Url.Action("GetProvincias", "Onpe")',
-                        type: 'POST',
+                        type: 'GET',
                         data: { idDepartamento: idDep },
                         success: function (data) {
                             data.forEach(item => {
@@ -243,7 +243,7 @@
                 if (idProv && idProv !== "") {
                     $.ajax({
                         url: '@Url.Action("GetDistritos", "Onpe")',
-                        type: 'POST',
+                        type: 'GET',
                         data: { idProvincia: idProv },
                         success: function (data) {
                             data.forEach(item => {
@@ -264,7 +264,7 @@
                 if (dist && dist !== "") {
                     $.ajax({
                         url: '@Url.Action("GetLocalesVotacion", "Onpe")',
-                        type: 'POST',
+                        type: 'GET',
                         data: { idDistrito: dist },
                         success: function (data) {
                             if (data) {
@@ -289,7 +289,7 @@
 
                 const $cuerpo = $('#cuerpoMesas');
 
-                $.post('@Url.Action("GetMesa", "Onpe")', { idLocal: idLocal }, function (mesas) {
+                $.get('@Url.Action("GetMesa", "Onpe")', { idLocal: idLocal }, function (mesas) {
                     $cuerpo.empty();
                     const total = mesas ? mesas.length : 0;
                     $('#totalMesasTxt').text(`Total de mesas: ${total}`);
@@ -324,7 +324,7 @@
 
                 $.ajax({
                     url: '@Url.Action("MesaDetalle", "Onpe")',
-                    type: 'POST',
+                    type: 'GET',
                     data: { nroMesa: nroMesa },
                     success: function (data) {
                         $('#resultadoDetalleMesa').html(data).fadeIn();

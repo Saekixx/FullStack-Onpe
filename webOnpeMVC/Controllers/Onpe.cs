@@ -74,42 +74,42 @@ namespace webOnpeMVC.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetProvincias(string idDepartamento)
         {
             var provincias = daoUbigeo.GetProvincias(idDepartamento);
             return Json(provincias);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetDistritos(string idProvincia)
         {
             var distritos = daoUbigeo.GetDistritos(idProvincia);
             return Json(distritos);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetLocalesVotacion(string idDistrito)
         {
             var local = daoVoto.getLocalesVotacion(idDistrito);
             return Json(local);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetLocales(string idDistrito)
         {
             var lista = daoVoto.getGrupoVotacion(idDistrito);
             return Json(lista);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetMesa(string idLocal)
         {
             var mesas = daoVoto.GetGruposVotacions(idLocal);
             return Json( mesas );
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult MesaDetalle(string nroMesa)
         {
             var model = daoVoto.getGrupoVotacion(nroMesa);
