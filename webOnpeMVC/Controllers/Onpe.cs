@@ -114,11 +114,6 @@ namespace webOnpeMVC.Controllers
         {
             var model = daoVoto.getGrupoVotacion(nroMesa);
 
-            if (model == null)
-            {
-                return Content("<div class='alert alert-warning'>No se encontró información detallada para la mesa " + nroMesa + "</div>");
-            }
-
             return PartialView("_DetalleMesa", model);
         }
 
