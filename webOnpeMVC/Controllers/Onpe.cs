@@ -9,6 +9,7 @@ namespace webOnpeMVC.Controllers
     public class Onpe : Controller
     {
         dao.daoVoto daoVoto = new dao.daoVoto();
+        dao.daoUbigeo daoUbigeo = new dao.daoUbigeo();
 
         public IActionResult Inicio()
         {
@@ -63,9 +64,8 @@ namespace webOnpeMVC.Controllers
         [HttpGet]
         public IActionResult Actas_Ubigeo()
         {
-            var todosLosDeptos = daoVoto.getDepartamentos();
+            var todosLosDeptos = daoUbigeo.getDepartamentos();
 
-            // Filtramos por ID como me indicaste (1-25 Perú, 26-30 Extranjero)
             ViewBag.DepartamentosPeru = todosLosDeptos.Where( d => (d.idDepartamento) <= 25).ToList();
             ViewBag.DepartamentosExtranjero = todosLosDeptos.Where( d => (d.idDepartamento) > 25).ToList();
 
@@ -75,14 +75,16 @@ namespace webOnpeMVC.Controllers
         [HttpGet]
         public JsonResult GetProvincias(string idDepartamento)
         {
-            var provincias = daoVoto.GetProvincias(idDepartamento);
+            var provincias = daoUbigeo.GetProvincias(idDepartamento);
+
             return Json(provincias);
         }
 
         [HttpGet]
         public JsonResult GetDistritos(string idProvincia)
         {
-            var distritos = daoVoto.GetDistritos(idProvincia);
+            var distritos = daoUbigeo.GetDistritos(idProvincia);
+
             return Json(distritos);
         }
 
@@ -111,11 +113,6 @@ namespace webOnpeMVC.Controllers
         public IActionResult MesaDetalle(string nroMesa)
         {
             var model = daoVoto.getGrupoVotacion(nroMesa);
-
-            if (model == null)
-            {
-                return Content("<div class='alert alert-warning'>No se encontró información detallada para la mesa " + nroMesa + "</div>");
-            }
 
             return PartialView("_DetalleMesa", model);
         }
