@@ -63,7 +63,6 @@ namespace webOnpeMVC.Controllers
         [HttpGet]
         public IActionResult Actas_Ubigeo()
         {
-            // Usamos las listas de Departamentos puras, no de votos
             var todosLosDeptos = daoVoto.getDepartamentos();
 
             // Filtramos por ID como me indicaste (1-25 Perú, 26-30 Extranjero)
@@ -73,44 +72,42 @@ namespace webOnpeMVC.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetProvincias(string idDepartamento)
         {
-            // Usamos el ID para obtener las provincias
             var provincias = daoVoto.GetProvincias(idDepartamento);
             return Json(provincias);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetDistritos(string idProvincia)
         {
-            // Usamos el ID para obtener los distritos
             var distritos = daoVoto.GetDistritos(idProvincia);
             return Json(distritos);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetLocalesVotacion(string idDistrito)
         {
             var local = daoVoto.getLocalesVotacion(idDistrito);
             return Json(local);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetLocales(string idDistrito)
         {
             var lista = daoVoto.getGrupoVotacion(idDistrito);
             return Json(lista);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetMesa(string idLocal)
         {
             var mesas = daoVoto.GetGruposVotacions(idLocal);
             return Json( mesas );
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult MesaDetalle(string nroMesa)
         {
             var model = daoVoto.getGrupoVotacion(nroMesa);

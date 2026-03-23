@@ -191,16 +191,27 @@
             const dptosPeru = @Html.Raw(Json.Serialize(ViewBag.DepartamentosPeru));
             const dptosExt = @Html.Raw(Json.Serialize(ViewBag.DepartamentosExtranjero));
 
+            async function getData(url, data) {
+                const params = new URLSearchParams(data).toString();
+                const fullUrl = params ? `${url}?${params}` : url;
+
+                const response = await fetch(fullUrl, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error('Error en la red');
+                return response.json();
+            }
+
             $('#cdgoAmbito').change(function () {
                 const ambito = $(this).val();
                 const $comboDep = $('#cdgoDep');
-
                 $comboDep.empty().append('<option value="">--SELECCIONE--</option>');
                 $('#cdgoProv, #cdgoDist').empty().append('<option value="">--SELECCIONE--</option>');
                 $('#actas_ubigeo').empty().append('<option value="-1?-1">--SELECCIONE--</option>');
 
                 let lista = (ambito === "P") ? dptosPeru : dptosExt;
-
                 if (lista) {
                     lista.forEach(item => {
                         $comboDep.append(`<option value="${item.idDepartamento}">${item.detalle}</option>`);
@@ -208,91 +219,70 @@
                 }
             });
 
-            $('#cdgoDep').change(function () {
+            $('#cdgoDep').change(async function () {
                 $('#divDetalle').hide();
                 const idDep = $(this).val();
                 const $comboProv = $('#cdgoProv');
-
                 $comboProv.empty().append('<option value="">--SELECCIONE--</option>');
                 $('#cdgoDist').empty().append('<option value="">--SELECCIONE--</option>');
-                $('#actas_ubigeo').empty().append('<option value="-1?-1">--SELECCIONE--</option>');
 
-                if (idDep && idDep !== "") {
-                    $.ajax({
-                        url: '@Url.Action("GetProvincias", "Onpe")',
-                        type: 'POST',
-                        data: { idDepartamento: idDep },
-                        success: function (data) {
-                            data.forEach(item => {
-                                $comboProv.append(`<option value="${item.idProvincia}">${item.detalle}</option>`);
-                            });
-                        }
-                    });
+                if (idDep) {
+                    try {
+                        const data = await getData('@Url.Action("GetProvincias", "Onpe")', { idDepartamento: idDep });
+                        data.forEach(item => {
+                            $comboProv.append(`<option value="${item.idProvincia}">${item.detalle}</option>`);
+                        });
+                    } catch (error) { console.error("Error provincias:", error); }
                 }
             });
 
-            $('#cdgoProv').on('change', function () {
+            $('#cdgoProv').on('change', async function () {
                 $('#divDetalle').hide();
                 const idProv = $(this).val();
                 const $comboDist = $('#cdgoDist');
-                const $comboLocal = $('#actas_ubigeo');
-
                 $comboDist.empty().append('<option value="">--SELECCIONE--</option>');
-                $comboLocal.empty().append('<option value="-1?-1">--SELECCIONE--</option>');
 
-                if (idProv && idProv !== "") {
-                    $.ajax({
-                        url: '@Url.Action("GetDistritos", "Onpe")',
-                        type: 'POST',
-                        data: { idProvincia: idProv },
-                        success: function (data) {
-                            data.forEach(item => {
-                                $comboDist.append(`<option value="${item.idDistrito}">${item.detalle}</option>`);
-                            });
-                        }
-                    });
+                if (idProv) {
+                    try {
+                        const data = await getData('@Url.Action("GetDistritos", "Onpe")', { idProvincia: idProv });
+                        data.forEach(item => {
+                            $comboDist.append(`<option value="${item.idDistrito}">${item.detalle}</option>`);
+                        });
+                    } catch (error) { console.error("Error distritos:", error); }
                 }
             });
 
-            $('#cdgoDist').on('change', function () {
+            $('#cdgoDist').on('change', async function () {
                 $('#divDetalle').hide();
                 const dist = $(this).val();
                 const $comboLocal = $('#actas_ubigeo');
-
                 $comboLocal.empty().append('<option value="-1?-1">--SELECCIONE--</option>');
 
-                if (dist && dist !== "") {
-                    $.ajax({
-                        url: '@Url.Action("GetLocalesVotacion", "Onpe")',
-                        type: 'POST',
-                        data: { idDistrito: dist },
-                        success: function (data) {
-                            if (data) {
-                                const id = data.idLocalVotacion || data.IdLocalVotacion;
-                                const nombre = data.razonSocial || data.RazonSocial;
-                                if (id) {
-                                    $comboLocal.append(`<option value="${id}">${nombre}</option>`);
-                                }
+                if (dist) {
+                    try {
+                        const data = await getData('@Url.Action("GetLocalesVotacion", "Onpe")', { idDistrito: dist });
+                        if (data) {
+                            const id = data.idLocalVotacion || data.IdLocalVotacion;
+                            const nombre = data.razonSocial || data.RazonSocial;
+                            if (id) {
+                                $comboLocal.append(`<option value="${id}">${nombre}</option>`);
                             }
                         }
-                    });
+                    } catch (error) { console.error("Error local:", error); }
                 }
             });
 
-            $('#actas_ubigeo').on('change', function () {
+            $('#actas_ubigeo').on('change', async function () {
                 const idLocal = $(this).val();
                 if (idLocal === "-1?-1" || !idLocal) {
                     $('#cuerpoMesas').empty();
-                    $('#totalMesasTxt').text("Total de mesas: 0");
                     return;
                 }
 
-                const $cuerpo = $('#cuerpoMesas');
-
-                $.post('@Url.Action("GetMesa", "Onpe")', { idLocal: idLocal }, function (mesas) {
-                    $cuerpo.empty();
-                    const total = mesas ? mesas.length : 0;
-                    $('#totalMesasTxt').text(`Total de mesas: ${total}`);
+                try {
+                    const mesas = await getData('@Url.Action("GetMesa", "Onpe")', { idLocal: idLocal });
+                    const $cuerpo = $('#cuerpoMesas').empty();
+                    $('#totalMesasTxt').text(`Total de mesas: ${mesas ? mesas.length : 0}`);
 
                     if (mesas && mesas.length > 0) {
                         let filaActual = $('<tr></tr>');
@@ -301,40 +291,28 @@
                                 $cuerpo.append(filaActual);
                                 filaActual = $('<tr></tr>');
                             }
-
                             let nroMesa = mesa.idGrupoVotacion.toString().padStart(6, '0');
-
-                            const td = `
+                            filaActual.append(`
                                 <td bgcolor="#C1C1C1" class="celda-mesa" data-mesa="${nroMesa}" style="cursor:pointer">
                                     <a href="javascript:void(0)">${nroMesa}</a>
-                                </td>`;
-                            filaActual.append(td);
+                                </td>`);
                         });
                         $cuerpo.append(filaActual);
                         $('#divDetalle').show();
                     }
-                });
+                } catch (error) { console.error("Error mesas:", error); }
             });
 
-
-            $('#cuerpoMesas').on('click', '.celda-mesa', function () {
+            $('#cuerpoMesas').on('click', '.celda-mesa', async function () {
                 const nroMesa = $(this).data('mesa');
+                $('#resultadoDetalleMesa').html('<p class="text-center">Cargando...</p>').show();
 
-                $('#resultadoDetalleMesa').html('<p class="text-center">Cargando detalle...</p>').show();
-
-                $.ajax({
-                    url: '@Url.Action("MesaDetalle", "Onpe")',
-                    type: 'POST',
-                    data: { nroMesa: nroMesa },
-                    success: function (data) {
-                        $('#resultadoDetalleMesa').html(data).fadeIn();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Estado:", status);
-                        console.error("Error:", error);
-                        console.log("Cuerpo de respuesta:", xhr.responseText);
-                    }
-                });
+                try {
+                    const url = '@Url.Action("MesaDetalle", "Onpe")' + '?nroMesa=' + nroMesa;
+                    const response = await fetch(url);
+                    const html = await response.text();
+                    $('#resultadoDetalleMesa').html(html).fadeIn();
+                } catch (error) { console.error("Error detalle:", error); }
             });
 
             $('#cdgoAmbito').trigger('change');
